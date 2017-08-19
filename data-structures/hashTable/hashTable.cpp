@@ -22,44 +22,44 @@ int HashTable::Hash(string key)
         hash = (int)key[i] + (hash << 6) + (hash << 16) - hash;
     }
 
-    hash = hash % this->_capacity;
+    hash = hash % _capacity;
     return hash;
 }
 
 void HashTable::Add(string key, string value)
 {
-
     //double if the size is above certain level
+    if (_size >= _capacity * _expandAt)
+    {
+        Doubling(_capacity * 2);
+    }
 
-    int index = this->Hash(key);
-
-    cout << key << " first try " << index << endl;
-    // cout << "Deleted key " << HashItem::GetDeletedKey();
-    while (this->_data[index].key != HashItem::GetNullKey() && this->_data[index].key != HashItem::GetDeletedKey())
+    int index = Hash(key);
+    cout << key << " key " << index << endl;
+    while (_data[index].key != HashItem::GetNullKey() && _data[index].key != HashItem::GetDeletedKey())
     {
         index++;
-        if (index >= this->_capacity)
+        if (index >= _capacity)
         {
             index = 0;
         }
         cout << key << " more " << index << endl;
     }
     HashItem item(key, value);
-    this->_data[index] = item;
-    this->_size++;
-    // cout << this->_size << " and capacity " << this->_capacity << endl;
+    _data[index] = item;
+    _size++;
 }
 
 string HashTable::Get(string key)
 {
-    int index = this->Hash(key);
+    int index = Hash(key);
     HashItem item;
 
     do
     {
-        item = this->_data[index];
+        item = _data[index];
         index++;
-        if (index >= this->_capacity)
+        if (index >= _capacity)
         {
             index = 0;
         }
@@ -70,22 +70,70 @@ string HashTable::Get(string key)
 
 void HashTable::Remove(string key)
 {
-    int index = this->Hash(key);
-    HashItem * item;
+    if (_size <= _capacity * _shrinkAt)
+    {
+        Doubling(_capacity / 2);
+    }
+
+    int index = Hash(key);
+    HashItem *item;
+
+    int cycleCount = 0;
     do
     {
-        item = &this->_data[index];
+        item = &_data[index];
         index++;
-        if (index >= this->_capacity)
+        if (index >= _capacity)
         {
             index = 0;
         }
-    } while (item->key != key && item->key != HashItem::GetNullKey());
-    // cout << item.key << item.value << " item " << endl;
-    item->SetDeletedKey();
-    // item->value = "";
+        cycleCount++;
+    } while (item->key != key && item->key != HashItem::GetNullKey() && cycleCount < _size);
 
-    for(int i = 0; i < this->_capacity; i++){
-        cout << this->_data[i].key << " key " << this->_data[i].value << " value" << endl; 
+    //Only if we found the item
+    if (cycleCount < _size)
+    {
+        _size--;
+        item->SetDeletedKey();
+    }
+}
+
+bool HashTable::Exists(string key)
+{
+    int index = Hash(key);
+    HashItem item;
+
+    do
+    {
+        item = _data[index];
+        index++;
+        if (index >= _capacity)
+        {
+            index = 0;
+        }
+    } while (item.key != key && item.key != HashItem::GetNullKey() && item.key != HashItem::GetDeletedKey());
+
+    return item.key == key;
+}
+
+void HashTable::Doubling(int newCapacity)
+{
+    HashItem *oldData = _data;
+    int oldCapacity = _capacity;
+    _data = new HashItem[newCapacity];
+    _capacity = newCapacity;
+    _size = 0;
+
+    for (int i = 0; i < _capacity; i++)
+    {
+        _data[i].SetNullKey();
+    }
+
+    for (int j = 0; j < oldCapacity; j++)
+    {
+        if (oldData[j].key != HashItem::GetNullKey() && oldData[j].key != HashItem::GetDeletedKey())
+        {
+            Add(oldData[j].key, oldData[j].value);
+        }
     }
 }

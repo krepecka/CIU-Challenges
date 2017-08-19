@@ -8,14 +8,17 @@ class HashTable{
         HashTable(int size);
 
         void Add(string key, string value);
-        void Exists(string key);
+        bool Exists(string key);
         string Get(string key);
         void Remove(string key);
         
-        HashItem * _data;
-        int Hash(string key);
     private:
-        int _size;
-        int _capacity;
-        
+        int _size, _capacity;
+        HashItem * _data;
+
+        int Hash(string key);
+        void Doubling(int newCapacity);
+        void Expand();
+
+        static const double _shrinkAt = 0.25, _expandAt = 0.75;
 };

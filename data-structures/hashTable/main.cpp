@@ -5,7 +5,7 @@ using namespace std;
 
 int main()
 {
-    HashTable test (9);
+    HashTable test (7);
 
     test.Add("Name", "Kristupas");
     test.Add("Surname", "Repecka");
@@ -15,17 +15,22 @@ int main()
     test.Add("Month", "July");
     test.Add("Day", "Friday");
     test.Add("Music", "Beautiful");
-    // test.Add("Horseface", "Arya");
+    test.Add("Horseface", "Arya");
 
-    for(int i = 0; i < 13; i++)
-    {
-        cout << test._data[i].value << endl;
-    }
+    test.Remove("Name");
+    test.Remove("Surname");
+    test.Remove("Fruit");
+    test.Remove("Drink");
+    test.Remove("Dog");
+    test.Remove("Month");
+    test.Remove("Day");
+    test.Remove("Music");
 
     cout << test.Get("Name") << endl;
     test.Remove("Dog");
     cout << test.Get("Dog") << endl;
     cout << test.Get("Music") << endl;
     cout << test.Get("Horseface") << endl;
+    cout << test.Exists("Hsrs") << endl;
 
 }
