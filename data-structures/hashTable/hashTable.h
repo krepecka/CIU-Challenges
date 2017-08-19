@@ -16,5 +16,6 @@ class HashTable{
         int Hash(string key);
     private:
         int _size;
+        int _capacity;
         
 };

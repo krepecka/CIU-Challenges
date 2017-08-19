@@ -14,11 +14,13 @@ class HashItem {
         }
 
         void SetDeletedKey(){
-            key = GetDeletedKey();
+            this->key = GetDeletedKey();
+            this->value = "";
         }
 
         void SetNullKey(){
             key = GetNullKey();
+            value = "";
         }
 
         static string GetDeletedKey() { return "<DELETED>"; }
