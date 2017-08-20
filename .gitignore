@@ -2,4 +2,4 @@ data-structures/**/bin
 data-structures/**/obj
 data-structures/**/.vscode
 data-structures/**/*.o
-
+search-algorithms/**/.vscode
