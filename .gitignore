@@ -3,3 +3,6 @@ data-structures/**/obj
 data-structures/**/.vscode
 data-structures/**/*.o
 search-algorithms/**/.vscode
+trees/**/**/bin
+trees/**/**/obj
+trees/**/.vscode
