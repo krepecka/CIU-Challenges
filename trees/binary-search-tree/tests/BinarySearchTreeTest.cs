@@ -182,5 +182,32 @@ namespace tests
 
             Assert.Equal(27, tree.GetSuccessor(26));
         }
+
+        [Theory]
+        [InlineData(26, 45)]
+        [InlineData(25, 37)]
+        [InlineData(15, 10)]
+        [InlineData(35, 32)]
+        [InlineData(37, 26)]
+        [InlineData(25, 32)]
+        public void TestRemove(int value, int value2)
+        {
+            BinarySearchTree<int> tree = new BinarySearchTree<int>(19);
+
+            tree.Insert(15);
+            tree.Insert(25);
+            tree.Insert(10);
+            tree.Insert(35);
+            tree.Insert(27);
+            tree.Insert(37);
+            tree.Insert(26);
+            tree.Insert(32);
+            tree.Insert(45);
+
+            tree.Remove(value);
+
+            Assert.False(tree.IsInTree(value));
+            Assert.True(tree.IsInTree(value2));
+        }
     }
 }

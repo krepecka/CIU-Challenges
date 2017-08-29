@@ -51,6 +51,11 @@ namespace BST
             return GetSuccessor(root, afterValue);
         }
 
+        public void Remove(T value)
+        {
+            Remove(value, root);
+        }
+
         private void Insert(Node<T> currentNode, Node<T> parent, T searchValue)
         {
             if (currentNode == null)
@@ -181,6 +186,81 @@ namespace BST
                     return GetSuccessor(currentNode.left, afterValue);
                 }
             }
+        }
+
+        private void Remove(T value, Node<T> currentNode)
+        {
+            if (currentNode == null)
+            {
+                return;
+            }
+
+            int compResult = value.CompareTo(currentNode.value);
+
+            if (compResult == 0)
+            {
+                bool isLeftChild = currentNode.parent.left != null && currentNode.Equals(currentNode.parent.left);
+                Node<T> newParentRef;
+
+                //if there's no right branch
+                if (currentNode.right == null)
+                {
+                    //if it's a leaf node
+                    if (currentNode.left == null)
+                    {
+                        newParentRef = null;
+                    }
+                    else
+                    {
+                        newParentRef = currentNode.left;
+                        currentNode.left.parent = currentNode.parent;
+                    }
+                }
+                else
+                {
+                    Node<T> replacement = GetNextMinNode(currentNode.right);
+
+                    //Reset old parent's link to replacement node
+                    if (replacement.parent.left != null && replacement.parent.left.Equals(replacement))
+                        replacement.parent.left = null;
+                    else
+                        replacement.parent.right = null;
+
+                    newParentRef = replacement;
+                    replacement.parent = currentNode.parent;
+                    replacement.left = currentNode.left;
+
+                    if (currentNode.left != null)
+                        currentNode.left.parent = replacement;
+
+                    if (replacement.right == null)
+                        replacement.right = currentNode.right;
+                }
+
+                if (isLeftChild)
+                    currentNode.parent.left = newParentRef;
+                else
+                    currentNode.parent.right = newParentRef;
+
+            }
+            else if (compResult > 0)
+            {
+                Remove(value, currentNode.right);
+            }
+            else
+            {
+                Remove(value, currentNode.left);
+            }
+        }
+
+        private Node<T> GetNextMinNode(Node<T> currentNode)
+        {
+            if (currentNode.left == null)
+            {
+                return currentNode;
+            }
+
+            return GetNextMinNode(currentNode.left);
         }
     }
 
