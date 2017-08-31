@@ -170,7 +170,7 @@ namespace BST
                 }
                 else
                 {
-                    return currentNode.parent != null ? currentNode.parent.value : default(T);
+                    return GetSuccessorUtils(currentNode);
                 }
             }
             else
@@ -185,6 +185,28 @@ namespace BST
                 {
                     return GetSuccessor(currentNode.left, afterValue);
                 }
+            }
+        }
+
+        private T GetSuccessorUtils(Node<T> currentNode)
+        {
+            if (currentNode.parent != null)
+            {
+                //if we're in left subtree, successor is the parent
+                if (currentNode.parent.left != null && currentNode.parent.left.Equals(currentNode))
+                {
+                    return currentNode.parent.value;
+                }
+                //if we're in right subtree, we need to go up until we reach parent of which 
+                // we would be left subtree
+                else
+                {
+                    return GetSuccessorUtils(currentNode.parent);
+                }
+            }
+            else
+            {
+                return default(T);
             }
         }
 

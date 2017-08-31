@@ -167,8 +167,11 @@ namespace tests
             Assert.Equal(25, tree.GetSuccessor(19));
         }
 
-        [Fact]
-        public void TestSuccessorNoRightBranch()
+        [Theory]
+        [InlineData(27, 26)]
+        [InlineData(35, 32)] //when it's not instant parent
+        [InlineData(0, 37)]
+        public void TestSuccessorNoRightBranch(int expectedSuccessor, int value)
         {
             BinarySearchTree<int> tree = new BinarySearchTree<int>(19);
 
@@ -179,8 +182,9 @@ namespace tests
             tree.Insert(27);
             tree.Insert(37);
             tree.Insert(26);
+            tree.Insert(32);
 
-            Assert.Equal(27, tree.GetSuccessor(26));
+            Assert.Equal(expectedSuccessor, tree.GetSuccessor(value));
         }
 
         [Theory]
